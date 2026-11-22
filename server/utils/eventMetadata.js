@@ -63,6 +63,21 @@ export function saveEventMetadata(slug, data = {}) {
 }
 
 /**
+ * Delete metadata for a specific event slug
+ */
+export function deleteEventMetadata(slug) {
+  try {
+    const all = loadAllMetadata();
+    if (all && all[slug]) {
+      delete all[slug];
+      fs.writeFileSync(METADATA_FILE, JSON.stringify(all, null, 2), 'utf-8');
+    }
+  } catch (err) {
+    console.warn('[Metadata] Error deleting event metadata:', err.message);
+  }
+}
+
+/**
  * Merges extra metadata (event_date, location) into an event object
  */
 export function enrichEvent(event) {
@@ -79,5 +94,6 @@ export function enrichEvent(event) {
 export default {
   loadAllMetadata,
   saveEventMetadata,
+  deleteEventMetadata,
   enrichEvent
 };

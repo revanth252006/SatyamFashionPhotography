@@ -268,14 +268,17 @@ export default function AdminPage() {
     }
   };
 
-  // Confirm and Delete Event
+  // Confirm and Delete Event Permanently
   const handleDeleteConfirm = async () => {
     if (!eventToDelete) return;
     setIsDeleting(true);
+    const targetId = eventToDelete.id;
     try {
-      await deleteAdminEvent(eventToDelete.id);
+      await deleteAdminEvent(targetId);
+      // Immediately remove from UI
+      setEvents((prev) => prev.filter((ev) => ev.id !== targetId));
       setEventToDelete(null);
-      loadEvents();
+      await loadEvents();
     } catch (err) {
       alert(`Error deleting event: ${err.message}`);
     } finally {
@@ -361,11 +364,11 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center">
-                <FolderTree className="w-5 h-5 text-rosewood-300" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 border border-stone-700 bg-white flex items-center justify-center shadow-xs">
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white block leading-tight">
+                <span className="font-serif text-sm sm:text-xl font-bold tracking-tight text-white block leading-tight">
                   SATYAM FASHION PHOTOGRAPHY
                 </span>
                 <span className="text-[10px] sm:text-xs tracking-widest uppercase text-rosewood-300 font-medium">

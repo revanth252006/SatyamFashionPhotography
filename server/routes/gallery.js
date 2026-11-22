@@ -45,8 +45,11 @@ async function findEventBySlug(slug) {
     if (!error && data) {
       return enrichEvent(data);
     }
+    // Supabase is active: if not found, event does not exist (or was deleted)
+    return null;
   }
 
+  // Fallback to demo events ONLY if Supabase is not configured
   const demo = DEMO_EVENTS.find((e) => e.slug === cleanSlug);
   return demo ? enrichEvent(demo) : null;
 }

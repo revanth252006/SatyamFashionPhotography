@@ -1,8 +1,8 @@
 import express from 'express';
 import crypto from 'crypto';
 import { getSupabaseClient } from '../config/supabase.js';
-import { extractFolderId, getEventCategories, normalizeDriveError } from '../utils/drive.js';
-import { saveEventMetadata, enrichEvent, loadAllMetadata } from '../utils/eventMetadata.js';
+import { extractFolderId, getEventCategories, normalizeDriveError, clearDriveCache } from '../utils/drive.js';
+import { saveEventMetadata, deleteEventMetadata, enrichEvent, loadAllMetadata } from '../utils/eventMetadata.js';
 import { getStudioSettings, saveStudioSettings } from '../utils/studioSettings.js';
 
 const router = express.Router();
@@ -383,11 +383,17 @@ router.delete('/events/:id', async (req, res, next) => {
       });
     }
 
-    const { data: existing, error: findError } = await supabase
-      .from('events')
-      .select('id, slug, title')
-      .eq('id', id)
-      .maybeSingle();
+    // 1. Find event by UUID or slug
+    let query = supabase.from('events').select('id, slug, title, drive_folder_id');
+    // If id looks like UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (isUuid) {
+      query = query.eq('id', id);
+    } else {
+      query = query.eq('slug', id);
+    }
+
+    const { data: existing, error: findError } = await query.maybeSingle();
 
     if (findError) throw findError;
     if (!existing) {
@@ -396,16 +402,35 @@ router.delete('/events/:id', async (req, res, next) => {
       });
     }
 
+    // 2. Delete all visitor download leads associated with this event slug first
+    const { error: leadsDeleteError } = await supabase
+      .from('download_leads')
+      .delete()
+      .eq('event_slug', existing.slug);
+
+    if (leadsDeleteError) {
+      console.warn(`[DeleteEvent] Warning deleting leads for ${existing.slug}:`, leadsDeleteError.message);
+    }
+
+    // 3. Delete event from Supabase events table permanently
     const { error: deleteError } = await supabase
       .from('events')
       .delete()
-      .eq('id', id);
+      .eq('id', existing.id);
 
     if (deleteError) throw deleteError;
 
+    // 4. Remove metadata from local JSON file
+    deleteEventMetadata(existing.slug);
+
+    // 5. Invalidate and purge cached folders & photo lists
+    if (existing.drive_folder_id) {
+      clearDriveCache(existing.drive_folder_id);
+    }
+
     res.json({
       success: true,
-      message: `Event "${existing.title}" deleted successfully.`
+      message: `Event "${existing.title}" and all its data were permanently deleted.`
     });
   } catch (err) {
     next(err);

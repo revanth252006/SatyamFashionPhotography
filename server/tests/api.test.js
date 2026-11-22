@@ -1,12 +1,24 @@
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
+import { getSupabaseClient } from '../config/supabase.js';
 
 describe('Express API Server Endpoints', () => {
   let server;
   let baseUrl;
 
   before(async () => {
+    // Ensure test event exists for integration tests
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      await supabase.from('events').upsert({
+        slug: 'satyam-and-nagalaxmi-6k7z3t',
+        title: 'Satyam weds Nagalaxmi',
+        client_name: 'Satyam And Nagalaxmi',
+        drive_folder_id: '1znJU4nLx5dQM0kUKjEYIg14Zxtf8MYDX'
+      }, { onConflict: 'slug' });
+    }
+
     await new Promise((resolve) => {
       server = app.listen(0, '127.0.0.1', () => {
         const port = server.address().port;

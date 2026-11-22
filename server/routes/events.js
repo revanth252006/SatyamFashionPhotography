@@ -66,16 +66,14 @@ router.get('/:slug', async (req, res, next) => {
         .from('events')
         .select('*')
         .eq('slug', slug)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         throw error;
       }
       event = data;
-    }
-
-    // Fallback to demo events if not in DB
-    if (!event) {
+    } else {
+      // Fallback to demo events ONLY if Supabase credentials are not configured
       event = DEMO_EVENTS.find((e) => e.slug === slug);
     }
 

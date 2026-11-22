@@ -1,0 +1,26 @@
+{
+  "name": "wedding-photo-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack responsive wedding photo gallery web app with React, Tailwind CSS, Express, Supabase, and Google Drive API v3",
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build && npm --prefix server install",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build",
+    "start": "node server/server.js"
+  },
+  "keywords": [
+    "wedding",
+    "photo-gallery",
+    "react",
+    "vite",
+    "tailwind",
+    "express",
+    "supabase",
+    "google-drive-api"
+  ],
+  "author": "",
+  "license": "MIT"
+}

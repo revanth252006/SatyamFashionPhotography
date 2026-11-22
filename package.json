@@ -4,7 +4,7 @@
   "private": true,
   "description": "Full-stack responsive wedding photo gallery web app with React, Tailwind CSS, Express, Supabase, and Google Drive API v3",
   "scripts": {
-    "build": "npm --prefix client install && npm --prefix client run build && npm --prefix server install",
+    "build": "npm --prefix client install --include=dev && npm --prefix client run build && npm --prefix server install",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",

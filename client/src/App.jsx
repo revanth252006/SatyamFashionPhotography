@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import HomePage from './pages/HomePage';
 import EventGalleryPage from './pages/EventGalleryPage';
 import AdminPage from './pages/AdminPage';
 
@@ -36,6 +37,6 @@ export default function App() {
     return <EventGalleryPage slug={slug} />;
   }
 
-  // Route 3: Default Home Gallery (/)
-  return <EventGalleryPage />;
+  // Route 3: Public Studio Homepage (/) - About photographer & contact details (No client photos)
+  return <HomePage />;
 }

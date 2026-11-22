@@ -302,6 +302,15 @@ export default function EventGalleryPage({ slug }) {
                 <RefreshCw className="w-4 h-4" />
                 <span>Retry Loading</span>
               </button>
+              <button
+                onClick={() => {
+                  if (window.navigateTo) window.navigateTo('/');
+                  else window.location.href = '/';
+                }}
+                className="w-full py-2.5 rounded-xl bg-stone-100 text-stone-700 font-medium text-sm hover:bg-stone-200 transition"
+              >
+                Return to Studio Home
+              </button>
             </div>
           </div>
         </main>

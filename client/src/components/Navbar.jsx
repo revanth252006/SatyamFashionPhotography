@@ -45,8 +45,8 @@ export default function Navbar({
 
             {/* Studio Name & Subtitle - Cleanly fitted on mobile */}
             <div className="min-w-0 flex-1">
-              <span className="font-serif text-[13px] sm:text-lg lg:text-xl font-bold tracking-tight text-stone-900 block leading-tight truncate">
-                SATYAM FASHION PHOTOGRAPHY
+              <span className="font-serif text-sm sm:text-base lg:text-xl font-bold tracking-tight text-stone-900 block leading-tight truncate">
+                Satyam Fashion Photography
               </span>
               <span className="hidden sm:block text-[10px] sm:text-xs tracking-widest uppercase text-stone-500 font-medium truncate mt-0.5">
                 Luxury Wedding & Fashion Photography
@@ -54,7 +54,7 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* Action buttons: Only Favorites and Download Gallery */}
+          {/* Action buttons: Favorites and Download Gallery */}
           <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
             {isAdmin ? (
               <button
@@ -92,12 +92,12 @@ export default function Navbar({
                 {/* Download Gallery Button */}
                 <button
                   onClick={onDownloadClick}
-                  className="inline-flex items-center space-x-1 sm:space-x-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-stone-900 text-white hover:bg-stone-800 shadow-sm transition active:scale-95"
+                  className="inline-flex items-center space-x-1 sm:space-x-1.5 px-2.5 min-[400px]:px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-stone-900 text-white hover:bg-stone-800 shadow-sm transition active:scale-95"
                   title="Download all gallery photos"
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rosewood-300" />
                   <span className="hidden sm:inline">Download Gallery</span>
-                  <span className="sm:hidden">Download</span>
+                  <span className="hidden min-[400px]:inline sm:hidden">Download</span>
                 </button>
               </>
             )}
